@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConstructEdge - Navigation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f9fafb;
+            min-height: 100vh;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background-color: white;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+
+        /* Logo Section */
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            background-color: #f97316;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .brand-info {
+            margin-left: 12px;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #111827;
+            line-height: 1;
+        }
+
+        .brand-subtitle {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav {
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            background: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: #374151;
+        }
+
+        .nav-button:hover {
+            background-color: #fef3e2;
+            color: #ea580c;
+        }
+
+        .nav-button.active {
+            background-color: #f97316;
+            color: white;
+        }
+
+        .nav-button.active:hover {
+            background-color: #ea580c;
+        }
+
+        .nav-button svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Right Section */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .icon-button:hover {
+            background-color: #f3f4f6;
+        }
+
+        .icon-button svg {
+            width: 16px;
+            height: 16px;
+            fill: #6b7280;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* User Profile */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .user-profile:hover {
+            background-color: #f3f4f6;
+        }
+
+        .user-avatar {
+            background-color: #fed7aa;
+            padding: 4px;
+            border-radius: 50%;
+        }
+
+        .user-avatar svg {
+            width: 16px;
+            height: 16px;
+            fill: #ea580c;
+        }
+
+        .user-info {
+            display: none;
+            text-align: left;
+        }
+
+        .user-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            line-height: 1;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #374151;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .dropdown-item.danger {
+            color: #dc2626;
+        }
+
+        .dropdown-separator {
+            height: 1px;
+            background-color: #e5e7eb;
+            margin: 4px 0;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: block;
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .mobile-menu-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #374151;
+        }
+
+        /* Mobile Sidebar */
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 6px -1px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .mobile-sidebar.open {
+            right: 0;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-user-avatar {
+            background-color: #fed7aa;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: #374151;
+            transition: all 0.2s;
+        }
+
+        .sidebar-nav-item:hover {
+            background-color: #fef3e2;
+            color: #ea580c;
+        }
+
+        .sidebar-nav-item.active {
+            background-color: #f97316;
+            color: white;
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid #e5e7eb;
+            padding: 20px;
+        }
+
+        /* Mobile Bottom Navigation */
+        .mobile-bottom-nav {
+            display: block;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 8px;
+            z-index: 1000;
+        }
+
+        .bottom-nav-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 4px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .bottom-nav-item.active {
+            color: #ea580c;
+            background-color: #fef3e2;
+        }
+
+        .bottom-nav-item svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1500;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            margin-bottom: 80px; /* Space for mobile bottom nav */
+        }
+
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+
+        .content-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 16px;
+        }
+
+        .content-description {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-card {
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+
+        .stat-card.orange {
+            background-color: #fef3e2;
+            border-color: #fed7aa;
+        }
+
+        .stat-card.blue {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .stat-card.green {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .stat-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .stat-card.orange .stat-title {
+            color: #9a3412;
+        }
+
+        .stat-card.blue .stat-title {
+            color: #1e40af;
+        }
+
+        .stat-card.green .stat-title {
+            color: #166534;
+        }
+
+        .stat-item {
+            font-size: 0.875rem;
+            margin-bottom: 4px;
+        }
+
+        .stat-card.orange .stat-item {
+            color: #ea580c;
+        }
+
+        .stat-card.blue .stat-item {
+            color: #2563eb;
+        }
+
+        .stat-card.green .stat-item {
+            color: #16a34a;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .user-info {
+                display: block;
+            }
+
+            .mobile-bottom-nav {
+                display: none;
+            }
+
+            .main-content {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .desktop-nav {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .nav-button .full-text {
+                display: inline;
+            }
+
+            .nav-button .short-text {
+                display: none;
+            }
+        }
+
+        .nav-button .full-text {
+            display: none;
+        }
+
+        .nav-button .short-text {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <div class="logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 18a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v2z"/>
+                        <path d="M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5"/>
+                        <path d="M4 15v-3a6 6 0 0 1 6-6h0"/>
+                        <path d="M14 6h0a6 6 0 0 1 6 6v3"/>
+                    </svg>
+                </div>
+                <div class="brand-info">
+                    <h1 class="brand-title">ConstructEdge</h1>
+                    <p class="brand-subtitle">Site Management</p>
+                </div>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="desktop-nav">
+                <button class="nav-button active" data-module="client-requirement">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10,9 9,9 8,9"/>
+                    </svg>
+                    <span class="short-text">Client</span>
+                    <span class="full-text">Client Requirement</span>
+                </button>
+
+                <button class="nav-button" data-module="communication" onclick="window.location.href='communication.html'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <span class="short-text">Communication</span>
+    <span class="full-text">Communication Module</span>
+</button>
+
+
+                <button class="nav-button" data-module="user-auth">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <circle cx="12" cy="16" r="1"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <span class="short-text">User Auth</span>
+                    <span class="full-text">User Authentication</span>
+                </button>
+
+                <button class="nav-button" data-module="inventory" onclick="window.location.href='inventory.html'">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    <span class="short-text">Inventory</span>
+                    <span class="full-text">Inventory Management</span>
+                </button>
+
+                <button class="nav-button" data-module="task-management">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <path d="M9 9h6"/>
+                        <path d="M9 15h6"/>
+                    </svg>
+                    <span class="short-text">Tasks</span>
+                    <span class="full-text">Task Management & Progress Reporting</span>
+                </button>
+            </div>
+
+            <!-- Right Section -->
+            <div class="nav-right">
+                <!-- Search Button -->
+                <button class="icon-button" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                </button>
+
+                <!-- Notifications -->
+                <button class="icon-button">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="notification-badge">3</span>
+                </button>
+
+                <!-- User Profile Dropdown -->
+                <div class="dropdown">
+                    <button class="user-profile" onclick="toggleDropdown()">
+                        <div class="user-avatar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="user-info">
+                            <p class="user-name">Shubham Pingale</p>
+                            <p class="user-role">Site-Admin</p>
+                        </div>
+                    </button>
+
+                    <div class="dropdown-menu "  id="userDropdown">
+                        <button class="dropdown-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            Profile
+                        </button>
+                        <button class="dropdown-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v6m0 6v6"/>
+                                <path d="M1 12h6m6 0h6"/>
+                            </svg>
+                            Settings
+                        </button>
+                        <div class="dropdown-separator"></div>
+                        <button class="dropdown-item danger">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16,17 21,12 16,7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                            Sign out
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-user">
+                <div class="sidebar-user-avatar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <div>
+                    <p class="user-name">John Smith</p>
+                    <p class="user-role">Site Manager</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-content">
+            <button class="sidebar-nav-item active" data-module="client-requirement">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14,2 14,8 20,8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10,9 9,9 8,9"/>
+                </svg>
+                Client Requirement
+            </button>
+
+           
+            <button class="sidebar-nav-item" data-module="user-auth">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <circle cx="12" cy="16" r="1"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                User Authentication
+            </button>
+
+            <button class="sidebar-nav-item" data-module="inventory">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+                Inventory Management
+            </button>
+
+            <button class="sidebar-nav-item" data-module="task-management">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <path d="M9 9h6"/>
+                    <path d="M9 15h6"/>
+                </svg>
+                Task Management & Progress Reporting
+            </button>
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="sidebar-nav-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 1v6m0 6v6"/>
+                    <path d="M1 12h6m6 0h6"/>
+                </svg>
+                Settings
+            </button>
+            <button class="sidebar-nav-item danger">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                    <polyline points="16,17 21,12 16,7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Sign out
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-bottom-nav">
+        <div class="bottom-nav-grid">
+            <button class="bottom-nav-item active" data-module="client-requirement">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14,2 14,8 20,8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10,9 9,9 8,9"/>
+                </svg>
+                <span>Client</span>
+            </button>
+
+            <button class="bottom-nav-item" data-module="communication">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>Chat</span>
+            </button>
+
+            <button class="bottom-nav-item" data-module="user-auth">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <circle cx="12" cy="16" r="1"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span>Users</span>
+            </button>
+
+            <button class="bottom-nav-item" data-module="inventory">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27,6.96 12,12.01 20.73,6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+                <span>Inventory</span>
+            </button>
+
+            <button class="bottom-nav-item" data-module="task-management">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <path d="M9 9h6"/>
+                    <path d="M9 15h6"/>
+                </svg>
+                <span>Tasks</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="closeMobileSidebar()"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-card">
+            <h2 class="content-title">Welcome to ConstructEdge Dashboard</h2>
+            <p class="content-description">
+                Select a module from the navigation bar to get started with your construction site management.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card orange">
+                    <h3 class="stat-title">Quick Stats</h3>
+                    <a  href="https://www.google.com" class="stat-item">5 Active Projects</a>
+                    <p class="stat-item">23 Team Members</p>
+                    <p class="stat-item">12 Pending Tasks</p>
+
+                </div>
+
+
+                <div class="stat-card blue">
+                    <h3 class="stat-title">Recent Activity</h3>
+                    <p class="stat-item">New client requirement added</p>
+                    <p class="stat-item">Inventory updated</p>
+                    <p class="stat-item">Task completed</p>
+                </div>
+
+                <div class="stat-card green">
+                    <h3 class="stat-title">System Status</h3>
+                    <p class="stat-item">All systems operational</p>
+                    <p class="stat-item">Last backup: 2 hours ago</p>
+                    <p class="stat-item">99.9% uptime</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let activeModule = 'client-requirement';
+
+        // Toggle user dropdown
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Toggle mobile sidebar
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // Close mobile sidebar
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        }
+
+        // Handle navigation clicks
+        function setActiveModule(moduleId) {
+            activeModule = moduleId;
+            
+            // Update all navigation buttons
+            const allNavButtons = document.querySelectorAll('[data-module]');
+            allNavButtons.forEach(button => {
+                if (button.dataset.module === moduleId) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+
+            // Close mobile sidebar if open
+            closeMobileSidebar();
+
+            // Here you would typically navigate to the selected module
+            console.log('Navigating to module:', moduleId);
+        }
+
+        // Add click listeners to all navigation buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const navButtons = document.querySelectorAll('[data-module]');
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    setActiveModule(this.dataset.module);
+                });
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('userDropdown');
+                const userProfile = document.querySelector('.user-profile');
+                
+                if (!userProfile.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 1024) {
+                    closeMobileSidebar();
+                }
+            });
+        });
+
+        // Simulate module navigation
+        function navigateToModule(moduleId) {
+            const moduleNames = {
+                'client-requirement': 'Client Requirements',
+                'communication': 'Communication Module',
+                'user-auth': 'User Authentication',
+                'inventory': 'Inventory Management',
+                'task-management': 'Task Management & Progress Reporting'
+            };
+
+            alert(`Navigating to: ${moduleNames[moduleId]}`);
+        }
+
+        // Add navigation functionality to dropdown items
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            dropdownItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const text = this.textContent.trim();
+                    if (text === 'Sign out') {
+                        alert('Signing out...');
+                    } else {
+                        alert(`Opening ${text}...`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
