@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ConstructEdge - Communication Module</title>
-    <style>
+    <link rel="stylesheet" href="style.css">
+    <!-- <style>
         * {
             margin: 0;
             padding: 0;
@@ -449,7 +450,7 @@
             color: #166534;
             font-size: 14px;
         }
-    </style>
+    </style> -->
 </head>
 <body>
     <div class="container">
@@ -552,7 +553,7 @@
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="emailMilestone" checked>
-                                <label for="emailMilestone">Milestone completions</label>
+                                <label for="emailMilestone">Milestone-completions</label>
                             </div>
                             <div class="checkbox-group">
                                 <input type="checkbox" id="emailIssues" checked>
@@ -601,43 +602,7 @@
         </div>
 
         <!-- Work Status Timeline -->
-        <div class="card status-timeline">
-            <div class="card-header">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                    <path d="M9 9h6"/>
-                    <path d="M9 15h6"/>
-                </svg>
-                Work Progress Status Timeline
-            </div>
-            <div class="card-content">
-                <div class="timeline-container" id="timelineContainer">
-                    <!-- Timeline items will be populated by JavaScript -->
-                </div>
-
-                <!-- Add New Status Update Form -->
-                <div class="update-form">
-                    <h4>Add Status Update</h4>
-                    <div class="form-row">
-                        <select id="newStatus">
-                            <option value="pending">Pending</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                            <option value="on-hold">On Hold</option>
-                        </select>
-                        <input type="number" id="newProgress" placeholder="Progress %" min="0" max="100">
-                    </div>
-                    <div class="form-row">
-                        <input type="text" id="newTitle" placeholder="Status Title">
-                        <input type="date" id="newDate">
-                    </div>
-                    <div class="form-row">
-                        <textarea id="newDescription" placeholder="Describe the current status, progress made, or any issues encountered..."></textarea>
-                    </div>
-                    <button class="update-btn" onclick="addStatusUpdate()">Add Status Update</button>
-                </div>
-            </div>
-        </div>
+     
     </div>
 
     <script>
